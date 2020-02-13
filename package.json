@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mcp-spi-adc": "^3.0.0",
     "pigpio": "^2.0.1"
   }
 }
