@@ -1,55 +1,61 @@
 const { Gpio } = require("pigpio");
 
 const createRotaryEncoder = ({
-	channelAPin = 17,
-	channelBPin = 18,
-	buttonPin = 27,
+	buttonPin,
+	channelAPin,
+	channelBPin,
 	onPushButton = () => {},
 	onClockwise = () => {},
 	onCounterClockwise = () => {},
 } = {}) => {
-	const switchButton = new Gpio(buttonPin, {
-		mode: Gpio.INPUT,
-		pullUpDown: Gpio.PUD_DOWN,
-		edge: Gpio.EITHER_EDGE,
-	});
+	if (buttonPin && onPushButton) {
+		const switchButton = new Gpio(buttonPin, {
+			mode: Gpio.INPUT,
+			pullUpDown: Gpio.PUD_DOWN,
+			edge: Gpio.EITHER_EDGE,
+		});
 
-	switchButton.on("interrupt", onPushButton);
+		switchButton.on("interrupt", onPushButton);
+	}
 
-	const channelA = new Gpio(channelAPin, {
-		mode: Gpio.INPUT,
-		pullUpDown: Gpio.PUD_UP,
-		edge: Gpio.RISING_EDGE,
-	});
+	if (channelAPin && channelBPin) {
+		const channelA = new Gpio(channelAPin, {
+			mode: Gpio.INPUT,
+			pullUpDown: Gpio.PUD_UP,
+			edge: Gpio.RISING_EDGE,
+		});
 
-	const channelB = new Gpio(channelBPin, {
-		mode: Gpio.INPUT,
-		pullUpDown: Gpio.PUD_UP,
-		edge: Gpio.RISING_EDGE,
-	});
+		const channelB = new Gpio(channelBPin, {
+			mode: Gpio.INPUT,
+			pullUpDown: Gpio.PUD_UP,
+			edge: Gpio.RISING_EDGE,
+		});
 
-	const _onClockwise = (a) => {
-		const b = channelB.digitalRead();
+		const _onClockwise = (a) => {
+			const b = channelB.digitalRead();
 
-		if (a && !b) onClockwise();
-	};
+			if (a && !b) onClockwise();
+		};
 
-	channelA.on("interrupt", _onClockwise);
+		channelA.on("interrupt", _onClockwise);
 
-	const _onCounterClockwise = (b) => {
-		const a = channelA.digitalRead();
+		const _onCounterClockwise = (b) => {
+			const a = channelA.digitalRead();
 
-		if (b && !a) onCounterClockwise();
-	};
+			if (b && !a) onCounterClockwise();
+		};
 
-	channelB.on("interrupt", _onCounterClockwise);
+		channelB.on("interrupt", _onCounterClockwise);
+	}
 };
 
 let count = 0;
 
 const encoder = createRotaryEncoder({
-	channelAPin: 17,
-	channelBPin: 18,
-	onClockwise: () => console.log(++count),
-	onCounterClockwise: () => console.log(--count),
+	// channelAPin: 17,
+	// channelBPin: 18,
+	// onClockwise: () => console.log(++count),
+	// onCounterClockwise: () => console.log(--count),
+	buttonPin: 17,
+	onPushButton: () => console.log("onPushButton")
 });
