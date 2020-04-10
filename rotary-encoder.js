@@ -11,7 +11,7 @@ const createRotaryEncoder = ({
 	if (buttonPin && onPushButton) {
 		const switchButton = new Gpio(buttonPin, {
 			mode: Gpio.INPUT,
-			pullUpDown: Gpio.PUD_DOWN,
+			pullUpDown: Gpio.PUD_UP,
 			edge: Gpio.EITHER_EDGE,
 		});
 
