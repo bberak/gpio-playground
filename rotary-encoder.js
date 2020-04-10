@@ -20,33 +20,28 @@ const channelA = new Gpio(17, {
 const channelB = new Gpio(18, {
 	mode: Gpio.INPUT,
 	pullUpDown: Gpio.PUD_UP,
-	edge: Gpio.EITHER__EDGE
+	edge: Gpio.RISING_EDGE
 });
 
-const onTwist = (a) => {	
-	
-	//const a = channelA.digitalRead();
+const onTwistClockwise = (a) => {	
 	const b = channelB.digitalRead();
 	
 	if (a && !b) {
 		count++;
 		console.log(count);
 	}
-
-	/*	
-	if (!a && b)
-		direction = 'ccw';
-	
-	if (a && !b)
-		direction = 'cw'
-
-	if (a && b) {
-		count = direction === 'cw' ? count + 1 : count - 1;
-		console.log('count', count);
-	}
-	*/
 }
 
 
-channelA.on('interrupt', onTwist);
-//channelB.on('interrupt', onTwist);
+channelA.on('interrupt', onTwistClockwise);
+
+const onTwistCounterClockwise = (b) => {
+	const a = channelA.digitalRead();
+	
+	if (b && !a) {
+		count--;
+		console.log(count);
+	}
+}
+
+channelB.on('interrupt', onTwistCounterClockwise);
