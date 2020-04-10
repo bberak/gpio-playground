@@ -8,14 +8,19 @@ const createRotaryEncoder = ({
 	onClockwise = () => {},
 	onCounterClockwise = () => {},
 } = {}) => {
-	if (buttonPin && onPushButton) {
+	if (buttonPin) {
 		const switchButton = new Gpio(buttonPin, {
 			mode: Gpio.INPUT,
 			pullUpDown: Gpio.PUD_UP,
-			edge: Gpio.EITHER_EDGE,
+			edge: Gpio.FALLING_EDGE,
 		});
 
-		switchButton.on("interrupt", onPushButton);
+		const _onPushButton = (level) => {
+			if (!level)
+				onPushButton();
+		};
+
+		switchButton.on("interrupt", _onPushButton);
 	}
 
 	if (channelAPin && channelBPin) {
@@ -52,10 +57,10 @@ const createRotaryEncoder = ({
 let count = 0;
 
 const encoder = createRotaryEncoder({
-	// channelAPin: 17,
-	// channelBPin: 18,
-	// onClockwise: () => console.log(++count),
-	// onCounterClockwise: () => console.log(--count),
-	buttonPin: 17,
-	onPushButton: () => console.log("onPushButton")
+	channelAPin: 17,
+	channelBPin: 18,
+	onClockwise: () => console.log(++count),
+	onCounterClockwise: () => console.log(--count),
+	//buttonPin: 17,
+	//onPushButton: () => console.log("onPushButton")
 });
