@@ -50,6 +50,6 @@ let count = 0;
 const encoder = createRotaryEncoder({
 	channelAPin: 17,
 	channelBPin: 18,
-	onClockwise: () => console.log(++count)),
-	onCounterClockwise: () => console.log(--count)),
+	onClockwise: () => console.log(++count),
+	onCounterClockwise: () => console.log(--count),
 });
